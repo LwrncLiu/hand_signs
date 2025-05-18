@@ -7,3 +7,11 @@ Detects hand signs from a webcam feed and translates the signs into the nearest 
 
 Clone this repository:
 
+```git clone https://github.com/LwrncLiu/hand_signs.git```
+
+In the `hand_signs/` directory you just cloned, create a conda environment and activate it:
+
+```
+conda create -n aslenv python=3.10
+conda activate aslenv
+```
