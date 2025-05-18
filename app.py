@@ -169,7 +169,7 @@ def setup() -> None:
             label_input = ui.input(placeholder='Enter label for photo', on_change=lambda _: update_submit_state()).classes('mt-2 hidden w-64')
             submit_button = ui.button('Submit & Save Photo', on_click=submit_photo).classes('hidden mt-2 w-fit')
             submit_button.disable()
-            retry_button = ui.button('Retry', on_click=retry_capture).classes('hidden mt-2 w-fit')  # Initially hidden
+            retry_button = ui.button('Retry', on_click=retry_capture).classes('hidden mt-2 w-fit')
 
     async def disconnect() -> None:
         for client_id in Client.instances:

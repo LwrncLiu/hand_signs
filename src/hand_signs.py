@@ -8,6 +8,8 @@ from mediapipe.framework.formats import landmark_pb2
 import chromadb
 import uuid
 from PIL import Image, ImageDraw, ImageFont
+import os 
+
 
 MARGIN = 10  # pixels
 FONT_SIZE = 10
@@ -27,8 +29,11 @@ class HandSigns():
         def update_result(result: vision.HandLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
             self.result = result
 
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(current_dir, 'model', 'hand_landmarker.task')
+
         options = vision.HandLandmarkerOptions(
-            base_options=python.BaseOptions(model_asset_path='model/hand_landmarker.task'),
+            base_options=python.BaseOptions(model_asset_path=model_path),
             running_mode=vision.RunningMode.LIVE_STREAM,
             num_hands=2,
             result_callback=update_result
@@ -121,7 +126,7 @@ class HandSigns():
             return rgb_image
         
     def close(self):
-        self.landmarker.close()
+        self.live_landmarker.close()
 
 
 if __name__ == '__main__':
