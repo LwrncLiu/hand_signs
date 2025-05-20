@@ -2,8 +2,6 @@
 import base64
 import signal
 import time
-from datetime import datetime
-from pathlib import Path
 from typing import Optional
 from src.hand_signs import HandSigns
 
@@ -36,7 +34,7 @@ def setup() -> None:
         ret, frame = await run.io_bound(video_capture.read)
         if not ret or frame is None:
             return placeholder
-        last_frame = frame.copy()  # <-- Store the last valid frame for later use
+        last_frame = frame.copy()  # Store the last valid frame for later use
 
         hand_signs.detect_async(frame)
         if hand_signs.result:
@@ -106,39 +104,36 @@ def setup() -> None:
 
     async def retry_capture():
         nonlocal hands_detected, is_capturing
-        hands_detected = False  # Reset hands detected flag
-        preview_image.set_source('')  # Clear preview
+        hands_detected = False  
+        preview_image.set_source('') 
         
-        retry_button.classes('hidden')  # Hide retry button
-        label_input.classes('hidden')  # Hide label input and submit button
-        submit_button.classes('hidden')  # Hide submit button
+        retry_button.classes('hidden')  
+        label_input.classes('hidden')  
+        submit_button.classes('hidden') 
         reset_button.classes('hidden')
         
-        video_image.classes(remove='hidden')  # Show webcam feed again
-        capture_button.classes(remove='hidden')  # Show capture button
+        video_image.classes(remove='hidden')
+        capture_button.classes(remove='hidden')
         start_stop_button.classes(remove='hidden')
         
-        # Resume webcam capture
         is_capturing = True
 
-    # Function to start/stop the test
     async def start_stop_test():
         nonlocal is_test_started
 
         if is_test_started:
             # Stop the test: show capture button and change the text
-            capture_button.classes(remove='hidden')  # Show capture button
+            capture_button.classes(remove='hidden') 
             reset_button.classes(remove='hidden')
-            start_stop_button.set_text('Start Test')  # Change text to "Start Test"
+            start_stop_button.set_text('Start Test')  
             hand_signs.testing = False
         else:
             # Start the test: hide capture button and change the text
-            capture_button.classes('hidden')  # Hide capture button
+            capture_button.classes('hidden') 
             reset_button.classes('hidden')
-            start_stop_button.set_text('Stop Test')  # Change text to "Stop Test"
+            start_stop_button.set_text('Stop Test') 
             hand_signs.testing = True
 
-        # Toggle the test state
         is_test_started = not is_test_started
 
     def reset_ui():
@@ -165,7 +160,7 @@ def setup() -> None:
         with ui.row().classes('justify-center w-full mt-4'):
             start_stop_button = ui.button('Start Test', on_click=start_stop_test).classes('w-fit mt-2')
             capture_button = ui.button('Capture Photo', on_click=capture_photo).classes('w-fit mt-2')
-            reset_button = ui.button('Reset DB', on_click=reset_db).classes('w-fit mt-2')
+            reset_button = ui.button('Reset DB', on_click=reset_db).props('color=red').classes('w-fit mt-2 bg-red-500 text-white hover:bg-red-600')
             label_input = ui.input(placeholder='Enter label for photo', on_change=lambda _: update_submit_state()).classes('mt-2 hidden w-64')
             submit_button = ui.button('Submit & Save Photo', on_click=submit_photo).classes('hidden mt-2 w-fit')
             submit_button.disable()

@@ -1,4 +1,3 @@
-import cv2
 import mediapipe as mp 
 import numpy as np
 from mediapipe.tasks import python
@@ -60,15 +59,21 @@ class HandSigns():
             )
 
     @staticmethod
-    def coordinates_to_vector(coords):
-        # using the palm base as the reference
+    def coordinates_to_vector(coords) -> np.ndarray:
         reference_point = np.array([coords[0].x, coords[0].y, coords[0].z]) 
 
-        x_coords = np.array([coord.x for coord in coords]) - reference_point[0]
-        y_coords = np.array([coord.y for coord in coords]) - reference_point[1]
-        z_coords = np.array([coord.z for coord in coords]) - reference_point[2]
+        # shift points to the reference point
+        points = np.array([[coord.x, coord.y, coord.z] for coord in coords])
+        normalized_points = points - reference_point
+        
+        # scale factor (max distance from reference)
+        scale = np.linalg.norm(normalized_points, axis=1).max()
+        if scale == 0:
+            scale = 1
 
-        return np.concatenate([x_coords, y_coords, z_coords])
+        scaled_points = normalized_points / scale
+
+        return scaled_points.flatten()
 
     def draw_landmarks_on_image(self, rgb_image, detection_result):
         try:
@@ -113,7 +118,7 @@ class HandSigns():
                             n_results=1
                         )
 
-                        if results and results['distances'][0][0] < 0.09 and handedness[0].category_name == results['metadatas'][0][0]['hand']:
+                        if results and results['distances'][0][0] < 0.1 and handedness[0].category_name == results['metadatas'][0][0]['hand']:
                             sign = results['metadatas'][0][0]['sign']
                             pil_image = Image.fromarray(annotated_image)
                             draw = ImageDraw.Draw(pil_image)
@@ -127,10 +132,3 @@ class HandSigns():
         
     def close(self):
         self.live_landmarker.close()
-
-
-if __name__ == '__main__':
-    dbclient = chromadb.PersistentClient()
-    collection = dbclient.get_or_create_collection(name="my_collection")
-
-    print(collection.peek())
