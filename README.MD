@@ -1,9 +1,9 @@
 # Hand Sign translator with mediapipe and chromadb
 
-Detects hand signs from a webcam feed and translates the signs into the nearest letter based on the ASL alphabet. The vector database (chromadb) comes pre-loaded with 26 letters of the alphabet A-Z. It is also possible to "train" the model on new hand signs.
+Detects static hand signs from a webcam feed and translates the signs into the nearest label provided to the vector database (chromadb). Add as many single static hand sign variations as you want or even add mulitple variants of the same label.
 
 <p align="center">
-<img src="src/static/asl_alphabet.png" alt="ASL Alphabet" style="width:50%;">
+  <img src="src/static/demo.gif" alt="Demo GIF" style="width:50%;">
 </p>
 
 ### Requirements
@@ -37,19 +37,36 @@ python app.py
 ### Navigate the UI
 Upon startup, you see the home screen with the webcam feed in the center and three buttons along the bottom: `START TEST`, `CAPTURE PHOTO`, `RESET DB`. 
 
-#### `START TEST`
-The orientation of the detected hands (if any) is normalized, scaled and queried against the chromadb vector database. If a given orientation's vector representation's euclidean distance is within 0.10 of an existing vector in the vector database, then the label for the existing vector is returned and drawn on the webcam feed. 
+<p align="center">
+<img src="src/static/home_page.png" alt="Home Page" style="width:50%;">
+</p>
 
-Try signing one of the hand signs in the ASL Alphabet diagram above to display the letter (label) on screen!
+#### `CAPTURE PHOTO`
 
-To stop testing, simply click the `STOP TEST` button to return to the home screen.
+<p align="center">
+<img src="src/static/capture_photo.png" alt="Capture Photo Page" style="width:50%;">
+</p>
 
-### `CAPTURE PHOTO`
-To extend this project's capabilities (e.g. adding more hand signs or increasing the "training data" of a given label), orient your hand (left or right) in view of the webcam and click `CAPTURE PHOTO`. A preview of the captured photo is shown. From here, you can add a label to the captured photo and add the hand sign to the vector database with `SUBMIT & SAVE PHOTO`. 
+To add hand signs and labels, orient your hand into the desired sign (left or right) in view of the webcam and click `CAPTURE PHOTO`. A preview of the captured photo is shown. Add a label to the captured photo and submit the hand sign to the vector database with `SUBMIT & SAVE PHOTO`. To start off, try signing a few letters from the ASL alphabet.
+
+<p align="center">
+<img src="src/static/asl_alphabet.png" alt="ASL Alphabet" style="width:50%;">
+</p>
+
 
 If the captured hand sign is not accurate or no hands were detected in the captured photo, click `RETRY` to return to the home screen.
 
-### `RESET DB`
+#### `START TEST`
+
+<p align="center">
+<img src="src/static/start_test.png" alt="Test Page" style="width:50%;">
+</p>
+
+The visible hand's landmarker coordinates are converted to vectors and queried against the chromadb vector database. If a given hand sign's vector representation's euclidean distance is within 0.10 of an existing vector in the vector database, then the label for the existing vector is returned and drawn on the webcam feed. 
+
+To stop testing, simply click the `STOP TEST` button to return to the home screen.
+
+#### `RESET DB`
 If you do not like the existing hand signs stored or want to start from scratch clicking `RESET DB` will delete all records in the chromadb collection so that you can start from scratch. 
 
-This button is RED because the effects are irreversible. 
+This button is RED because the effects are irreversible!
