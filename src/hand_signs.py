@@ -4,7 +4,6 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import time 
 from mediapipe.framework.formats import landmark_pb2
-from mediapipe.tasks.components.containers import NormalizedLandmark
 import chromadb
 import uuid
 from PIL import Image, ImageDraw, ImageFont
@@ -91,7 +90,7 @@ class HandSigns():
             )
 
     @staticmethod
-    def coordinates_to_vector(coords: List[NormalizedLandmark]) -> np.ndarray:
+    def coordinates_to_vector(coords: List["NormalizedLandmark"]) -> np.ndarray:
         """
         Converts a list of (x, y, z) hand landmark coordinates into a flattened, scale- and translation-invariant vector by 
         shifting all points relative to the wrist and normalizing based on the maximum distance from the wrist.
